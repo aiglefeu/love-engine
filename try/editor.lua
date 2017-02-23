@@ -4,8 +4,20 @@ require "cube"
 require "cube2"
 -----------------------
 edit = {}
+map = {x = 500, y = 500}
+grillage ={}
 Sprite = 0
 Chargement = love.graphics.newImage("data/assets/cube.png")
+
+--Variable concernant l'aide à la souris dit grillage --
+grillage.size = 20
+--X--
+grillage.Xmin = 0
+grillage.Xmax = grillage.size
+--Y--
+grillage.Ymin = 0
+grillage.Ymax = grillage.size
+---------------------------------------------------------
 
 -- cursor adaptation --
 function Cursorupdate()
@@ -27,8 +39,10 @@ function edit:load()
 end
 
 function edit:draw()
-  self.x = love.mouse.getX()
-  self.y = love.mouse.getY()
+  self.x = grillage.Xmin
+  self.y = grillage.Ymin
+  love.graphics.print(self.x,300,200)
+  love.graphics.print(self.y,300,220)
 
   self.width = self.image:getWidth()/2
   self.height = self.image:getHeight()/2
@@ -61,3 +75,32 @@ function edit:update()
     end
 end
 ---------------------
+
+--- Aide à la la soruis --
+
+function edit:grillage()
+  if (love.mouse.getX()> grillage.Xmin and love.mouse.getX() < grillage.Xmax) then
+      self.x = grillage.Xmin
+    end
+  if (love.mouse.getX()< grillage.Xmin) then
+      grillage.Xmin = grillage.Xmin - grillage.size
+     grillage.Xmax =  grillage.Xmax- grillage.size
+    end
+  if (love.mouse.getX()> grillage.Xmax) then
+     grillage.Xmax =  grillage.Xmax + grillage.size
+     grillage.Xmin = grillage.Xmin + grillage.size
+    end
+
+  if (love.mouse.getY()> grillage.Ymin and love.mouse.getY() < grillage.Ymax) then
+    self.y = grillage.Ymin
+  end
+  if (love.mouse.getY() < grillage.Ymin) then
+    grillage.Ymin = grillage.Ymin - grillage.size
+    grillage.Ymax = grillage.Ymax - grillage.size
+  end
+  if (love.mouse.getY() > grillage.Ymax) then
+    grillage.Ymax = grillage.Ymax + grillage.size
+    grillage.Ymin = grillage.Ymin + grillage.size
+  end
+end
+-------------------------

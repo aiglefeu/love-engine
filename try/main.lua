@@ -11,6 +11,7 @@ end
 function love.update(dt)
 Cursorupdate()
 edit:update()
+edit:grillage()
 end
 
 function love.draw()
