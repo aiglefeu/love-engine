@@ -1,16 +1,28 @@
 
 -- Classe nécéssaire --
-require "cube"
-require "cube2"
+require "decor"
 -----------------------
 edit = {}
+
+-- variable d'édition de la map --
 map = {x = 500, y = 500}
 grillage ={}
+----------------------------------
+
+-- Variable de changement/ chargement de sprite --
 Sprite = 0
 Chargement = love.graphics.newImage("data/assets/cube.png")
+--------------------------------------------------
+
+-- Variable qui définit le sprite --
+rotation = 0
+pressed = false
+rotation_value = 10 -- valeur de la rotation
+nombre_de_sprite = 3
+------------------------------------
 
 --Variable concernant l'aide à la souris dit grillage --
-grillage.size = 20
+grillage.size = 30 -- modifier la taille du cadriallage
 --X--
 grillage.Xmin = 0
 grillage.Xmax = grillage.size
@@ -19,8 +31,8 @@ grillage.Ymin = 0
 grillage.Ymax = grillage.size
 ---------------------------------------------------------
 
--- cursor adaptation --
-function Cursorupdate()
+-- cursor adaptation + bloque adaptation --
+function entity_adaptation()
   if Sprite == 0 then
     Chargement = love.graphics.newImage("data/assets/cube.png")
     edit:load()
@@ -30,12 +42,21 @@ function Cursorupdate()
     Chargement = love.graphics.newImage("data/assets/cube2.png")
     edit:load()
   end
+  if Sprite == 2 then
+    Chargement = love.graphics.newImage("data/assets/cube3.png")
+    edit:load()
+  end
+  if Sprite == 3 then
+    Chargement = love.graphics.newImage("data/assets/cube4.png")
+    edit:load()
+  end
 end
 -----------------------
 
 -- effet du curseur --
 function edit:load()
   self.image = Chargement -- curseur qui change en fonction du sprite
+  decor:load()
 end
 
 function edit:draw()
@@ -47,23 +68,32 @@ function edit:draw()
   self.width = self.image:getWidth()/2
   self.height = self.image:getHeight()/2
   love.graphics.print(Sprite,200,200)
-  love.graphics.draw(self.image, self.x,self.y,0,1,1,self.width,self.height)
+  love.graphics.draw(self.image, self.x,self.y,rotation,1,1,self.width,self.height)
 end
 
-function edit:update()
+function edit:update(dt)
   if love.mouse.isDown(1) then
-
-    if Sprite == 0 then
-      cube:coord()
-    end
-
-    if Sprite == 1 then
-      cube2:coord()
-    end
-
+    decor:coord()
   end
+
+-- Rotation des entités --
+  if love.keyboard.isDown("r") and pressed == false then
+    rotation = rotation + rotation_value*dt
+    pressed = true
+  end
+
+  if love.keyboard.isDown("e") and pressed == false then
+    rotation = rotation - rotation_value*dt
+    pressed = true
+  end
+
+  if not love.keyboard.isDown("r", "e") and pressed == true then
+    pressed = false
+  end
+--------------------------
+
   function love.wheelmoved( x, y )
-      if y >= 1 and Sprite < 1 then
+      if y >= 1 and Sprite < nombre_de_sprite then
         Sprite = Sprite + 1
         y = 0
       end
